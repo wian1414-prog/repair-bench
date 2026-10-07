@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14302B">
+<title>Repair Bench</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<style>
+:root{--bg:#EEF3F1;--card:#fff;--ink:#14302B;--mute:#5E7771;--line:#D5E1DD;--go:#1B8A5A;--stop:#C93C3C;--pop:#FFB400;--popink:#2B1D00;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0E1D1A;--card:#17302B;--ink:#EAF5F2;--mute:#9DB7B1;--line:#2A4A44;--go:#4CD08F;--stop:#FF7A7A}}
+:root[data-theme="dark"]{--bg:#0E1D1A;--card:#17302B;--ink:#EAF5F2;--mute:#9DB7B1;--line:#2A4A44;--go:#4CD08F;--stop:#FF7A7A}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:Nunito,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:18px;line-height:1.35}
+main{max-width:560px;margin:0 auto;padding:16px 16px 120px}
+h1{font-size:30px;margin:8px 0 2px;font-weight:800}
+.sub{color:var(--mute);margin:0 0 16px}
+.sum{display:flex;gap:10px;margin-bottom:16px}
+.sum div{flex:1;background:var(--card);border-radius:18px;padding:12px 14px}
+.sum b{display:block;font-size:24px;font-weight:800}
+.sum span{color:var(--mute);font-size:14px}
+.phone{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:var(--card);border:0;border-radius:22px;padding:16px;margin-bottom:12px;color:inherit;font:inherit;cursor:pointer;transition:transform .12s}
+.phone:active{transform:scale(.98)}
+.phone .t{flex:1;min-width:0}
+.phone .n{font-weight:800;font-size:20px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.phone .m{color:var(--mute);font-size:15px}
+.chip{border-radius:14px;padding:8px 12px;font-weight:800;white-space:nowrap}
+.chip.go{background:color-mix(in srgb,var(--go) 16%,transparent);color:var(--go)}
+.chip.stop{background:color-mix(in srgb,var(--stop) 16%,transparent);color:var(--stop)}
+.empty{text-align:center;padding:48px 16px;color:var(--mute)}
+.empty .big{font-size:56px}
+.fab{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--pop);color:var(--popink);border:0;border-radius:999px;padding:18px 32px;font:800 20px Nunito,system-ui,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.25);cursor:pointer;min-height:60px}
+.fab:active{transform:translateX(-50%) scale(.96)}
+.top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.back{background:var(--card);border:0;border-radius:50%;width:48px;height:48px;font-size:22px;color:var(--ink);cursor:pointer}
+.step{margin:22px 0 8px;font-weight:800;font-size:20px}
+.step i{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--ink);color:var(--bg);font-style:normal;font-size:15px;margin-right:8px}
+input[type=text],input[type=number],input[type=url]{width:100%;border:2px solid var(--line);background:var(--card);color:var(--ink);border-radius:16px;padding:14px;font:600 18px Nunito,system-ui,sans-serif;min-height:54px}
+input:focus,button:focus-visible{outline:3px solid var(--pop);outline-offset:2px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tile{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:14px 8px;text-align:center;font:800 16px Nunito,system-ui,sans-serif;color:var(--ink);cursor:pointer;min-height:84px;transition:transform .12s}
+.tile:active{transform:scale(.96)}
+.tile .e{display:block;font-size:28px}
+.tile.on{border-color:var(--go);background:color-mix(in srgb,var(--go) 14%,var(--card))}
+.fault{background:var(--card);border-radius:18px;padding:12px;margin-top:10px}
+.fault b{display:block;margin-bottom:8px}
+.fault input+input{margin-top:8px}
+.card{background:var(--card);border-radius:22px;padding:16px;margin-top:18px}
+.row{display:flex;justify-content:space-between;padding:6px 0}
+.row.big{font-size:24px;font-weight:800;border-top:2px solid var(--line);margin-top:6px;padding-top:12px}
+.go{color:var(--go)}.stop{color:var(--stop)}
+.btn{display:block;width:100%;border:0;border-radius:18px;padding:16px;margin-top:12px;font:800 18px Nunito,system-ui,sans-serif;cursor:pointer;min-height:56px;text-align:center;text-decoration:none}
+.btn.main{background:var(--pop);color:var(--popink)}
+.btn.soft{background:var(--card);color:var(--ink)}
+.btn.del{background:transparent;color:var(--stop)}
+.verdict{font-size:20px;font-weight:800;margin:0 0 8px}
+.note{white-space:pre-wrap;color:var(--mute);font-size:16px}
+.toast{position:fixed;left:50%;bottom:100px;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 20px;border-radius:999px;font-weight:800;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<div class="toast" id="toast"></div>
+<script>
+var FAULTS=[["screen","📱","Cracked screen"],["battery","🔋","Bad battery"],["charge","🔌","Won't charge"],["back","🪟","Broken back"],["camera","📷","Camera"],["sound","🔊","Speaker or mic"],["water","💧","Water damage"],["dead","⚫","Won't turn on"]];
+var phones=[],cur=null,view="list";
+try{phones=JSON.parse(localStorage.getItem("rb_phones")||"[]")}catch(e){phones=[]}
+function save(){try{localStorage.setItem("rb_phones",JSON.stringify(phones))}catch(e){}}
+function R(n){n=Math.round(Number(n)||0);return (n<0?"-R ":"R ")+Math.abs(n).toLocaleString("en-ZA").replace(/,/g," ")}
+function esc(s){return String(s==null?"":s).replace(/[&<>\"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function parts(p){return p.faults.reduce(function(a,f){return a+(Number(f.cost)||0)},0)}
+function net(p){return (Number(p.resale)||0)-parts(p)}
+function fname(k){var f=FAULTS.filter(function(x){return x[0]==k})[0];return f?f[2]:k}
+function toast(t){var e=document.getElementById("toast");e.textContent=t;e.className="toast show";setTimeout(function(){e.className="toast"},1800)}
+function safeUrl(u){u=String(u||"").trim();if(!u)return"";if(!/^https?:\/\//i.test(u))u="https://"+u;try{var x=new URL(u);x.search="";x.hash="";return x.href}catch(e){return""}}
+function summary(p){var fl=p.faults.map(function(f){return fname(f.k)+" ("+R(f.cost)+")"}).join(", ")||"no faults logged";var n=net(p);
+return p.name+"\nFaults: "+fl+"\nWorth now (fixed): "+R(p.resale)+"\nParts needed: "+R(parts(p))+"\nLeft over: "+R(n)+"\nVerdict: "+(n>0?"Worth fixing. You keep "+R(n)+".":"Not worth fixing. Parts cost more than the phone is worth.")}
+
+function list(){view="list";var tot=phones.reduce(function(a,p){return a+Math.max(0,net(p))},0);var h='<h1>Repair Bench</h1><p class="sub">Your phones and what they are worth</p>';
+if(!phones.length){h+='<div class="empty"><div class="big">🔧</div><p>No phones yet.<br>Tap the yellow button to add your first one.</p></div>'}
+else{h+='<div class="sum"><div><b>'+phones.length+'</b><span>Phones</span></div><div><b>'+R(tot)+'</b><span>Worth fixing</span></div></div>';
+phones.forEach(function(p,i){var n=net(p);h+='<button class="phone" data-open="'+i+'"><div class="t"><div class="n">'+esc(p.name)+'</div><div class="m">'+p.faults.length+' fault'+(p.faults.length==1?"":"s")+' · parts '+R(parts(p))+'</div></div><span class="chip '+(n>0?"go":"stop")+'">'+R(n)+'</span></button>'})}
+h+='<div class="grid" style="margin-top:8px"><button class="btn soft" data-backup="1">Save backup</button><button class="btn soft" data-restore="1">Restore backup</button></div><input type="file" id="rf" accept=".json,application/json" hidden>';
+h+='<button class="fab" data-add="1">+ Add phone</button>';draw(h)}
+
+function form(i){view="form";cur=i==null?{id:Date.now(),name:"",resale:"",faults:[]}:JSON.parse(JSON.stringify(phones[i]));cur._i=i;render()}
+function render(){var p=cur;var h='<div class="top"><button class="back" data-back="1" aria-label="Back">←</button><h1>'+(p._i==null?"New phone":"Edit phone")+'</h1></div>';
+h+='<div class="step"><i>1</i>Which phone?</div><input type="text" id="name" placeholder="Example: Samsung A12" value="'+esc(p.name)+'">';
+h+='<div class="step"><i>2</i>What is broken?</div><div class="grid">';
+FAULTS.forEach(function(f){var on=p.faults.some(function(x){return x.k==f[0]});h+='<button class="tile'+(on?" on":"")+'" data-f="'+f[0]+'"><span class="e">'+(on?"✅":f[1])+'</span>'+f[2]+'</button>'});h+='</div>';
+p.faults.forEach(function(f,j){h+='<div class="fault"><b>'+fname(f.k)+'</b><input type="number" inputmode="decimal" min="0" data-cost="'+j+'" placeholder="Part price in R" value="'+esc(f.cost)+'"><input type="url" data-link="'+j+'" placeholder="Shop link (optional)" value="'+esc(f.link)+'"></div>'});
+h+='<div class="step"><i>3</i>What is it worth when fixed?</div><input type="number" inputmode="decimal" min="0" id="resale" placeholder="Price in R" value="'+esc(p.resale)+'">';
+h+='<button class="btn main" data-save="1">Save phone</button>';draw(h)}
+
+function detail(i){view="detail";cur=i;var p=phones[i],n=net(p);
+var h='<div class="top"><button class="back" data-back="1" aria-label="Back">←</button><h1>'+esc(p.name)+'</h1></div>';
+h+='<div class="card"><p class="verdict '+(n>0?"go":"stop")+'">'+(n>0?"✅ Worth fixing":"🛑 Not worth fixing")+'</p>';
+h+='<div class="row"><span>Worth when fixed</span><b>'+R(p.resale)+'</b></div><div class="row"><span>Parts needed</span><b>'+R(parts(p))+'</b></div><div class="row big"><span>Left over</span><span class="'+(n>0?"go":"stop")+'">'+R(n)+'</span></div></div>';
+if(p.faults.length){h+='<div class="step">Buy parts</div>';p.faults.forEach(function(f){var u=safeUrl(f.link);h+=u?'<a class="btn soft" target="_blank" rel="noopener noreferrer" href="'+esc(u)+'">🛒 '+fname(f.k)+' · '+R(f.cost)+'</a>':'<div class="btn soft" style="opacity:.6">'+fname(f.k)+' · '+R(f.cost)+' (no link)</div>'})}
+h+='<div class="card"><div class="note">'+esc(summary(p))+'</div></div>';
+h+='<button class="btn main" data-share="1">Copy report</button><button class="btn soft" data-edit="1">Edit</button><button class="btn del" data-del="1">Delete phone</button>';draw(h)}
+
+function draw(h){var a=document.getElementById("app");a.innerHTML=h;window.scrollTo(0,0)}
+function readForm(){var n=document.getElementById("name"),r=document.getElementById("resale");if(n)cur.name=n.value;if(r)cur.resale=r.value;
+document.querySelectorAll("[data-cost]").forEach(function(e){cur.faults[e.dataset.cost].cost=e.value});document.querySelectorAll("[data-link]").forEach(function(e){cur.faults[e.dataset.link].link=e.value})}
+
+document.addEventListener("click",function(e){var t=e.target.closest("button,a");if(!t)return;var d=t.dataset;
+if(d.add)form();
+else if(d.open!=null)detail(+d.open);
+else if(d.back){if(view=="form"&&cur._i!=null)detail(cur._i);else list()}
+else if(d.f){readForm();var k=d.f,ix=-1;cur.faults.forEach(function(x,j){if(x.k==k)ix=j});if(ix>=0)cur.faults.splice(ix,1);else cur.faults.push({k:k,cost:"",link:""});render()}
+else if(d.save){readForm();if(!cur.name.trim()){toast("Type the phone name first");document.getElementById("name").focus();return}
+var o={id:cur.id,name:cur.name.trim(),resale:Number(cur.resale)||0,faults:cur.faults.map(function(f){return{k:f.k,cost:Number(f.cost)||0,link:safeUrl(f.link)}})};
+if(cur._i==null){phones.unshift(o);save();toast("Saved");detail(0)}else{phones[cur._i]=o;save();toast("Saved");detail(cur._i)}}
+else if(d.edit)form(cur);
+else if(d.backup){if(!phones.length){toast("Nothing to back up yet");return}try{var b=new Blob([JSON.stringify({app:"repair-bench",phones:phones})],{type:"application/json"});var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="repair-bench-backup.json";document.body.appendChild(a);a.click();a.remove();toast("Backup saved")}catch(x){toast("Could not save backup")}}
+else if(d.restore){var rf=document.getElementById("rf");if(rf)rf.click()}
+else if(d.share){var s=summary(phones[cur]);if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(s).then(function(){toast("Copied")},function(){toast("Could not copy")})}else toast("Could not copy")}
+else if(d.del){if(t.dataset.sure){phones.splice(cur,1);save();toast("Deleted");list()}else{t.dataset.sure=1;t.textContent="Tap again to delete"}}
+});
+document.addEventListener("change",function(e){if(e.target.id!="rf"||!e.target.files[0])return;var r=new FileReader();r.onload=function(){try{var o=JSON.parse(r.result);if(o.app!="repair-bench"||!Array.isArray(o.phones))throw 0;phones=o.phones.map(function(p){return{id:p.id||Date.now(),name:String(p.name||"Phone"),resale:Number(p.resale)||0,faults:(Array.isArray(p.faults)?p.faults:[]).map(function(f){return{k:String(f.k),cost:Number(f.cost)||0,link:safeUrl(f.link)}})}});save();toast("Backup restored");list()}catch(x){toast("That is not a Repair Bench backup")}};r.readAsText(e.target.files[0])});
+list();
+if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
+</script>
+</body>
+</html>
